@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Street Monograph</title>
+<meta name="description" content="A monograph of street and documentary photography: 103 photographers, from Atget's Paris to the phone camera.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: one reel of film. A sticky stage plays six scenes as you scroll, from the pinhole to the pixel; the book waits at the end of the roll. */
+:root{
+  --black:#070707; --base:#0e0d0c; --bone:#ece7dc; --dim:#9b958a; --edge:#d9b65a; --pencil:#e2452c;
+  --safe:#ff2a12; --silver:#c9cdd0; --brass:#a8834a; --paper:#eceeeb; --ink:#15181a;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--black)}
+body{margin:0;background:var(--black);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.5;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--edge);outline-offset:3px}
+
+/* ---------- film leader ---------- */
+.leader{position:fixed;inset:0;z-index:60;background:#d8d2c4;display:grid;place-items:center;cursor:pointer;animation:leaderOut .35s linear 1.75s forwards}
+.leader::before,.leader::after{content:"";position:absolute;background:#1a1a1a}
+.leader::before{left:0;right:0;top:50%;height:2px}
+.leader::after{top:0;bottom:0;left:50%;width:2px}
+.leader .ring{width:min(62vmin,460px);aspect-ratio:1;border-radius:50%;border:3px solid #1a1a1a;position:relative;display:grid;place-items:center;box-shadow:0 0 0 14px #d8d2c4,0 0 0 16px #1a1a1a}
+.leader .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(0,0,0,.28) var(--a,0deg),transparent 0);animation:sweep .58s linear 3}
+.leader .n{font-family:var(--display);font-weight:800;font-size:min(40vmin,300px);line-height:1;color:#1a1a1a;position:relative}
+.leader .n span{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:translateY(-4%)}
+.leader .n span:nth-child(1){animation:num .58s steps(1) 0s 1 both}
+.leader .n span:nth-child(2){animation:num .58s steps(1) .58s 1 both}
+.leader .n span:nth-child(3){animation:num .58s steps(1) 1.16s 1 both}
+.leader .n{width:1em;height:1em}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes sweep{from{--a:0deg}to{--a:360deg}}
+@keyframes num{0%{opacity:1}100%{opacity:0}}
+@keyframes leaderOut{to{opacity:0;visibility:hidden}}
+.leader.skip{display:none}
+
+/* ---------- grain, scratches, flicker ---------- */
+.grain{position:fixed;inset:-60px;z-index:40;pointer-events:none;opacity:.17;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .5s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-22px,14px)}50%{transform:translate(18px,-26px)}75%{transform:translate(-9px,31px)}100%{transform:translate(12px,-8px)}}
+.scratch{position:fixed;top:0;bottom:0;width:1px;z-index:41;pointer-events:none;background:linear-gradient(transparent,rgba(255,255,255,.22) 20%,rgba(255,255,255,.05) 60%,transparent);opacity:0;animation:scratch 7s steps(1) infinite}
+.scratch.b{animation-duration:11s;animation-delay:2.5s}
+@keyframes scratch{0%{left:23%;opacity:.7}3%{left:23.4%;opacity:.5}6%{opacity:0}40%{left:71%;opacity:.6}42%{left:70.6%;opacity:0}77%{left:48%;opacity:.4}79%{opacity:0}100%{opacity:0}}
+.vignette{position:fixed;inset:0;z-index:39;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed;z-index:50;left:0;right:0;display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 clamp(16px,3vw,34px);font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--edge);pointer-events:none;mix-blend-mode:normal}
+.hud.top{top:calc(env(safe-area-inset-top,0px) + 14px)}
+.hud.bot{bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+.hud a{pointer-events:auto;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.hud a:hover{color:var(--bone)}
+.hud b{font-weight:500;color:var(--bone)}
+.hud .hint{animation:nudge 1.8s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateY(4px)}}
+.perf{position:fixed;z-index:49;top:0;bottom:0;left:0;width:14px;pointer-events:none;background:
+  repeating-linear-gradient(to bottom,transparent 0 9px,rgba(236,231,220,.22) 9px 17px,transparent 17px 26px);opacity:.5}
+.perf i{position:absolute;left:0;width:14px;height:26px;background:var(--pencil);top:calc(var(--p,0) * (100% - 26px))}
+
+/* ---------- reel + stage ---------- */
+.reel{position:relative;height:880vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--black)}
+.sc{position:absolute;inset:0;display:grid;place-items:center;opacity:0;visibility:hidden;--t:0}
+.sc:first-child{opacity:1;visibility:visible}
+.cap{position:absolute;left:clamp(28px,6vw,90px);right:clamp(16px,6vw,90px);bottom:clamp(54px,9vh,96px);max-width:46ch;z-index:5}
+.when{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--edge);margin:0 0 8px}
+.cap h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(30px,5vw,60px);line-height:.92;margin:0 0 12px;text-wrap:balance}
+.cap p{margin:0;color:var(--bone);font-size:clamp(15px,1.5vw,18px);text-wrap:pretty}
+.cap .src{display:block;margin-top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--dim)}
+.cap .src a{border-bottom:1px solid var(--dim);text-decoration:none}
+
+/* A: camera obscura */
+.sc-obscura{background:#000}
+.wall{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 46%,#f4ead2 0%,#d9c9a3 34%,#6d5f43 70%,#1a150c 100%);transform:rotate(calc(var(--rot,180) * 1deg));will-change:transform}
+.wall .word{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(54px,13.5vw,220px);line-height:.8;text-align:center;color:#17130c;letter-spacing:-.005em;filter:blur(calc((1 - var(--sharp,0)) * 5px))}
+.wall .word small{display:block;font-family:var(--mono);font-weight:500;font-size:clamp(10px,1.15vw,15px);letter-spacing:.3em;margin-top:2.2em;color:#3a3020}
+.skyline{position:absolute;left:0;right:0;bottom:0;height:26%;background:
+  linear-gradient(#17130c,#17130c) 4% 100%/7% 62% no-repeat,linear-gradient(#17130c,#17130c) 13% 100%/5% 88% no-repeat,linear-gradient(#17130c,#17130c) 20% 100%/9% 48% no-repeat,
+  linear-gradient(#17130c,#17130c) 33% 100%/4% 74% no-repeat,linear-gradient(#17130c,#17130c) 62% 100%/6% 70% no-repeat,linear-gradient(#17130c,#17130c) 71% 100%/10% 44% no-repeat,
+  linear-gradient(#17130c,#17130c) 84% 100%/5% 92% no-repeat,linear-gradient(#17130c,#17130c) 93% 100%/8% 56% no-repeat,linear-gradient(#17130c,#17130c) 0 100%/100% 12% no-repeat;opacity:.9}
+.iris{position:absolute;inset:0;pointer-events:none}
+.blade{position:absolute;left:50%;top:50%;width:320vmax;height:160vmax;margin:-160vmax 0 0 -160vmax;transform-origin:50% 100%;
+  background:linear-gradient(to top,#1b1b1b 0,#0a0a0a 5vmax,#050505 100%);border-bottom:1px solid rgba(255,255,255,.16);
+  transform:rotate(calc(var(--k) * 45deg + var(--sw,0) * 1deg)) translateY(calc(var(--o,6) * -1vmax));will-change:transform}
+.sc-obscura .cap{text-shadow:0 1px 12px #000,0 0 2px #000;opacity:calc(1 - var(--t) * 3.2)}
+
+/* B: daguerreotype */
+.sc-plate{background:radial-gradient(ellipse at 30% 40%,#2a2019 0%,#120d0a 60%,#050403 100%)}
+.platewrap{position:relative;width:min(74vw,92vh,860px);margin-top:-9vh;transform:perspective(1400px) rotateY(calc((var(--t) - .5) * -10deg)) rotateX(3deg)}
+.case{background:linear-gradient(135deg,#3a2415,#1c110a 60%,#2b1a0f);padding:clamp(10px,1.6vw,20px);border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.06)}
+.mat{background:linear-gradient(135deg,#d7b56d,#8c6a34 40%,#e5c98a 55%,#7a5a2a);padding:clamp(12px,2.2vw,30px);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4),inset 0 0 18px rgba(0,0,0,.35)}
+.plate{position:relative;aspect-ratio:4/3;max-width:100%;overflow:hidden;border-radius:46% 46% 6% 6% / 22% 22% 4% 4%;background:linear-gradient(120deg,#8d9499,#dfe3e5 45%,#7e868b 60%,#c7ccd0);box-shadow:inset 0 0 0 2px rgba(0,0,0,.45),inset 0 0 40px rgba(0,0,0,.5)}
+.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) sepia(.18);opacity:calc(var(--t) * 1.5);mix-blend-mode:multiply}
+.plate::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.55) 45%,rgba(160,190,255,.22) 52%,transparent 70%);background-size:260% 100%;background-position:calc(120% - var(--t) * 140%) 0;mix-blend-mode:screen}
+.plate .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:#3d4347;text-transform:uppercase}
+.expo{position:absolute;right:clamp(16px,6vw,90px);top:clamp(64px,12vh,120px);font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--edge);text-align:right}
+.expo .bar{width:min(34vw,220px);height:6px;border:1px solid var(--edge);margin-top:6px;position:relative}
+.expo .bar i{position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--t));background:var(--edge)}
+
+/* C: hand camera */
+.sc-kodak{background:radial-gradient(ellipse at 60% 40%,#3b2f22 0%,#17110b 62%,#060504 100%)}
+.snaps{position:relative;width:min(84vw,980px);height:min(56vh,520px);margin-top:-12vh}
+.snap{position:absolute;top:50%;left:50%;width:min(44vw,42vh,360px);aspect-ratio:1;margin:calc(min(44vw,42vh,360px) / -2) 0 0 calc(min(44vw,42vh,360px) / -2);background:#e9e1cf;padding:6.5%;box-shadow:0 18px 50px rgba(0,0,0,.7);
+  transform:translateX(calc(var(--dx) * var(--f,0) * 1%)) rotate(calc(var(--r) * var(--f,0) * 1deg)) scale(calc(.82 + var(--f,0) * .18))}
+.snap .rnd{width:100%;height:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 40% 35%,#8f8676,#2b261e);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+.snap img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.35) contrast(1.05)}
+.snap figcaption{position:absolute;left:0;right:0;bottom:1.2%;text-align:center;font-family:var(--mono);font-size:clamp(7.5px,.8vw,10px);letter-spacing:.08em;color:#4a4233;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6%}
+.snap{margin-bottom:0}
+.flash{position:absolute;inset:0;background:#fff;opacity:var(--fl,0);pointer-events:none;mix-blend-mode:screen}
+
+/* D: 35mm */
+.sc-strip{background:linear-gradient(#0c0b0a,#141210 50%,#0a0908)}
+.strip-top{position:absolute;top:clamp(58px,10vh,110px);left:clamp(28px,6vw,90px);right:clamp(16px,6vw,90px);z-index:5;max-width:50ch}
+.strip-top h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(30px,5vw,60px);line-height:.92;margin:0 0 10px;text-wrap:balance}
+.strip-top p{margin:0;font-size:clamp(15px,1.5vw,18px)}
+.filmwrap{position:absolute;left:-2vw;right:-2vw;top:60%;height:0;transform:rotate(-1.2deg)}
+.film{position:absolute;left:0;top:0;display:flex;gap:0;will-change:transform;transform:translate3d(var(--x,0),-42%,0);background:#1a1613;
+  border-top:34px solid transparent;border-bottom:34px solid transparent;
+  background-image:repeating-linear-gradient(90deg,transparent 0 14px,#070605 14px 34px,transparent 34px 48px),linear-gradient(#2a221b,#2a221b);background-size:48px 18px,100% 100%;background-position:0 8px,0 0;background-repeat:repeat-x,no-repeat;background-origin:border-box;background-clip:border-box}
+.film::after{content:"";position:absolute;left:0;right:0;bottom:-26px;height:18px;background:repeating-linear-gradient(90deg,transparent 0 14px,#070605 14px 34px,transparent 34px 48px);background-size:48px 18px}
+.fr{flex:none;width:clamp(150px,17vw,220px);aspect-ratio:3/2;margin:0 5px;position:relative;text-decoration:none;color:#f1ece0;overflow:hidden;background:#444;display:block;transition:filter .15s,transform .15s}
+.fr:hover,.fr:focus-visible{filter:brightness(1.35);transform:scale(1.04);z-index:2}
+.fr .nm{position:absolute;left:8px;right:8px;bottom:22px;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.8vw,23px);line-height:1;text-transform:uppercase;text-shadow:0 1px 3px #000}
+.fr .yr{position:absolute;left:8px;bottom:7px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-shadow:0 1px 2px #000}
+.fr .no{position:absolute;right:7px;top:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--edge)}
+.fr.lead{background:#0f0d0b;display:grid;place-items:center;text-align:center;padding:10px;color:var(--edge);border:1px dashed rgba(217,182,90,.4)}
+.fr.lead b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(30px,3.4vw,46px);line-height:.9}
+.fr.lead span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.4;display:block;margin-top:6px}
+.edgeprint{position:absolute;left:0;top:-27px;white-space:nowrap;font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:rgba(217,182,90,.75)}
+.era{position:absolute;left:clamp(28px,6vw,90px);right:clamp(16px,6vw,90px);bottom:clamp(54px,9vh,96px);z-index:5;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 18px;align-items:baseline;max-width:70ch}
+.era b{font-family:var(--display);font-weight:800;font-size:clamp(38px,6vw,76px);line-height:.85;color:var(--edge);font-variant-numeric:tabular-nums;grid-row:span 2}
+.era span{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--edge)}
+.era p{margin:0;font-size:clamp(14px,1.4vw,17px)}
+
+/* E: darkroom */
+.sc-dark{background:radial-gradient(ellipse at 50% 18%,#5a0b06 0%,#2a0503 38%,#0d0101 78%,#040000 100%)}
+.lamp{position:absolute;top:0;left:50%;width:120px;height:44px;margin-left:-60px;background:#1a0302;border-radius:0 0 60px 60px;box-shadow:0 0 90px 40px rgba(255,42,18,.35),0 0 12px 2px rgba(255,90,60,.9) inset;animation:lamp 4s ease-in-out infinite}
+@keyframes lamp{50%{box-shadow:0 0 110px 50px rgba(255,42,18,.42),0 0 12px 2px rgba(255,90,60,1) inset}}
+.tray{position:relative;width:min(70vw,78vh,720px);margin-top:-10vh;padding:clamp(14px,2.4vw,30px);background:linear-gradient(#2b0806,#170302);border:2px solid #3d0c08;border-radius:10px;transform:perspective(1100px) rotateX(24deg);box-shadow:0 40px 90px rgba(0,0,0,.85),inset 0 0 50px rgba(0,0,0,.7)}
+.print{position:relative;aspect-ratio:4/3;max-width:100%;background:#f3d9d2;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.6)}
+.print img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(calc(.55 + var(--dv,0) * .75)) brightness(calc(1.5 - var(--dv,0) * .5));opacity:var(--dv,0)}
+.print .ph{position:absolute;inset:0;background:linear-gradient(160deg,#1a1a1a,#666 40%,#222 70%,#999);opacity:var(--dv,0)}
+.print::before{content:"";position:absolute;inset:0;z-index:2;background:rgba(255,40,20,.33);mix-blend-mode:multiply}
+.print::after{content:"";position:absolute;inset:-20%;z-index:3;background:repeating-radial-gradient(ellipse at 30% 40%,rgba(255,255,255,.06) 0 14px,transparent 14px 44px);animation:ripple 5s linear infinite;mix-blend-mode:screen}
+@keyframes ripple{to{transform:translate(6%,4%) rotate(2deg)}}
+.pencilbox{position:absolute;inset:-3%;z-index:4;overflow:visible;pointer-events:none}
+.pencilbox path{fill:none;stroke:var(--pencil);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--pc,0))}
+.timer{position:absolute;right:clamp(16px,6vw,90px);top:clamp(64px,12vh,120px);font-family:var(--mono);color:#ff7a66;text-align:right;letter-spacing:.14em;font-size:11.5px;text-transform:uppercase}
+.timer b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(40px,6vw,72px);line-height:.9;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:#ff5a44}
+.sc-dark .cap h2,.sc-dark .cap p{color:#ffd9d2}
+.sc-dark .when{color:#ff7a66}
+
+/* F: digital */
+.sc-digital{background:#050608}
+#px{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.end{position:relative;z-index:5;text-align:center;padding:0 20px;opacity:var(--cta,0);transform:translateY(calc((1 - var(--cta,0)) * 18px));margin-top:34vh}
+.end p{margin:0 auto 18px;max-width:44ch;font-size:clamp(15px,1.5vw,18px)}
+.btn{display:inline-block;font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(22px,3vw,34px);letter-spacing:.03em;line-height:1;padding:16px 26px 14px;background:var(--bone);color:#0b0b0b;text-decoration:none;border-radius:2px;position:relative}
+.btn::after{content:"";position:absolute;inset:-7px;border:3px solid var(--pencil);border-radius:4px 9px 5px 8px;transform:rotate(-.8deg);pointer-events:none}
+.btn:hover{background:#fff}
+.sc-digital .when{position:absolute;top:clamp(58px,10vh,110px);left:clamp(28px,6vw,90px)}
+
+/* ---------- after the reel ---------- */
+.after{background:var(--paper);color:var(--ink);padding-inline:clamp(16px,6vw,90px);padding-block:64px 80px;position:relative;z-index:45;color-scheme:light}
+.after .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5b6166;margin:0 0 10px}
+.after h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(44px,7vw,96px);line-height:.88;margin:0;text-wrap:balance}
+.after .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:end;margin-top:22px}
+.after .lede{font-style:italic;font-size:clamp(19px,2.2vw,23px);line-height:1.45;max-width:42ch;margin:0}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink)}
+.nums div{padding:10px 10px 0 0}
+.nums b{display:block;font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.nums span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:#5b6166;text-transform:uppercase}
+.go{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:36px}
+.after .btn{background:var(--ink);color:var(--paper)}
+.after .btn:hover{background:#000}
+.go a.txt{font-family:var(--mono);font-size:13px;border-bottom:1px solid var(--ink);text-decoration:none;padding-bottom:2px}
+.parts{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));border-top:2px solid var(--ink)}
+.parts li{padding:10px 14px 12px 0;border-bottom:1px solid #cdd1ce}
+.parts a{text-decoration:none;display:grid;grid-template-columns:34px 1fr;gap:0 6px;align-items:baseline}
+.parts b{font-family:var(--display);font-weight:800;font-size:24px;line-height:1}
+.parts span{font-size:15.5px;line-height:1.3}
+.parts small{grid-column:2;font-family:var(--mono);font-size:11px;color:#5b6166}
+.parts a:hover b,.parts a:hover span{color:#c3311d}
+.credit{font-family:var(--mono);font-size:11.5px;color:#5b6166;max-width:80ch;margin:40px 0 0;line-height:1.6}
+
+@media (min-width:900px){
+  .platewrap{width:min(46vw,70vh,760px);margin:-4vh 0 0 36vw}
+  .snaps{width:min(46vw,760px);margin:-6vh 0 0 40vw}
+  .tray{width:min(46vw,70vh,700px);margin:-6vh 0 0 34vw}
+  .sc-plate .cap,.sc-kodak .cap,.sc-dark .cap{max-width:min(34vw,46ch);bottom:auto;top:50%;transform:translateY(-50%)}
+  .strip-top{top:clamp(58px,9vh,100px)}
+}
+@media (max-width:760px){
+  .cap,.era{bottom:calc(env(safe-area-inset-bottom,0px) + 46px)}
+  .platewrap{width:min(88vw,62vh);margin-top:-22vh}
+  .snaps{margin-top:-26vh;height:44vh}
+  .tray{width:min(86vw,56vh);margin-top:-24vh}
+  .expo,.timer{top:calc(env(safe-area-inset-top,0px) + 50px)}
+  .after .grid{grid-template-columns:minmax(0,1fr)}
+  .perf{display:none}
+  .hud .long{display:none}
+  .era{grid-template-columns:minmax(0,1fr)}
+  .era b{grid-row:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .leader{display:none}
+  .grain,.scratch,.lamp,.print::after,.hud .hint{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="leader" id="leader" aria-hidden="true"><div class="ring"><div class="sweep"></div><div class="n"><span>3</span><span>2</span><span>1</span></div></div></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scratch" aria-hidden="true"></div><div class="scratch b" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="perf" aria-hidden="true"><i id="perf"></i></div>
+
+<div class="hud top"><span><b>Street Monograph</b></span><a href="book.html">Skip to the book →</a></div>
+<div class="hud bot"><span id="counter">01 / 06 · Camera obscura</span><span class="hint" id="hint">Scroll <span class="long">to advance the film </span>↓</span></div>
+
+<main>
+<div class="reel" id="reel">
+  <div class="stage" id="stage">
+
+    <section class="sc sc-obscura" data-w="1.3" data-name="Camera obscura">
+      <div class="wall"><div class="skyline"></div><div class="word">Street<br>Monograph<small>A WAY OF PAYING ATTENTION</small></div></div>
+      <div class="iris" aria-hidden="true"><div class="blade" style="--k:0"></div><div class="blade" style="--k:1"></div><div class="blade" style="--k:2"></div><div class="blade" style="--k:3"></div><div class="blade" style="--k:4"></div><div class="blade" style="--k:5"></div><div class="blade" style="--k:6"></div><div class="blade" style="--k:7"></div></div>
+      <div class="cap"><p class="when">c. 1000 · Camera obscura</p><h2>A dark room with a hole in it</h2><p>Light from the street passes through a pinhole and draws the scene on the far wall, upside down. For eight hundred years nobody can make it stay.</p></div>
+    </section>
+
+    <section class="sc sc-plate" data-w="1.2" data-name="Daguerreotype">
+      <div class="expo">Exposure<div class="bar"><i></i></div><span id="expo">0 min</span></div>
+      <div class="platewrap"><div class="case"><div class="mat"><div class="plate"><div class="ph" id="plate-ph">Silvered copper plate</div><img id="plate-img" alt="Boulevard du Temple, Paris, daguerreotype by Louis Daguerre, 1838" hidden></div></div></div></div>
+      <div class="cap"><p class="when">1838 · Daguerreotype</p><h2>The first person ever photographed was standing in the street</h2><p>Daguerre's view of the Boulevard du Temple took minutes to expose. The traffic vanished. One man held still long enough to register: he was having his boots polished.</p><span class="src" id="plate-src"></span></div>
+    </section>
+
+    <section class="sc sc-kodak" data-w="1.1" data-name="The hand camera">
+      <div class="snaps" id="snaps">
+        <figure class="snap" style="--dx:-92;--r:-9"><div class="rnd"><img alt="" hidden></div><figcaption>Riis · Bandits' Roost · 1888</figcaption></figure>
+        <figure class="snap" style="--dx:92;--r:8"><div class="rnd"><img alt="" hidden></div><figcaption>Hine · Newsies, St. Louis · 1910</figcaption></figure>
+        <figure class="snap" style="--dx:0;--r:-2"><div class="rnd"><img alt="" hidden></div><figcaption>Stieglitz · Winter, Fifth Avenue · 1893</figcaption></figure>
+      </div>
+      <div class="flash" aria-hidden="true"></div>
+      <div class="cap"><p class="when">1888 · Roll film and the hand camera</p><h2>You press the button</h2><p>The first Kodak made round pictures and needed no tripod. Flash powder took Jacob Riis into the tenements at night. In 1893 Alfred Stieglitz stood for hours in a blizzard with a hand camera, waiting for one coach.</p></div>
+    </section>
+
+    <section class="sc sc-strip" data-w="2.8" data-name="35mm">
+      <div class="strip-top"><p class="when">1925 · 35mm</p><h2>A camera small enough to forget</h2><p>The Leica put thirty-six frames in a coat pocket. Here is the whole book on one roll: 103 photographers in nine parts. Pick any frame.</p></div>
+      <div class="filmwrap"><div class="film" id="film"><span class="edgeprint" id="edgeprint"></span></div></div>
+      <div class="era"><b id="era-y">1857</b><span id="era-part">Part I · Foundations</span><p id="era-txt">The city becomes a subject.</p></div>
+    </section>
+
+    <section class="sc sc-dark" data-w="1.4" data-name="The darkroom">
+      <div class="lamp" aria-hidden="true"></div>
+      <div class="timer">Developer<b id="timer">0:00</b>20 °C</div>
+      <div class="tray"><div class="print"><div class="ph" id="print-ph"></div><img id="print-img" alt="Coin de la rue Valette et Panthéon, Paris, by Eugène Atget, 1925" hidden>
+        <svg class="pencilbox" viewBox="0 0 314 236" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M10 14 C80 5 220 9 304 11 C311 76 306 160 308 224 C220 231 90 229 11 226 C5 150 10 76 7 18"/></svg></div></div>
+      <div class="cap"><p class="when">The darkroom</p><h2>Ninety seconds under red light</h2><p>A blank sheet goes into the tray and the street comes back. Then the contact sheet, a grease pencil, and the only question that matters: which frame?</p><span class="src" id="print-src"></span></div>
+    </section>
+
+    <section class="sc sc-digital" data-w="1.2" data-name="The sensor">
+      <canvas id="px" aria-hidden="true"></canvas>
+      <p class="when">1975 · The sensor &nbsp;·&nbsp; 2007 · The phone</p>
+      <div class="end"><p>The first digital camera recorded 10,000 pixels. Now the camera is always in a pocket, and the street has more photographers than ever.</p><a class="btn" href="book.html">Open the monograph</a></div>
+    </section>
+
+  </div>
+</div>
+
+<section class="after">
+  <p class="eyebrow">A monograph of street and documentary photography</p>
+  <h2>A way of paying attention</h2>
+  <div class="grid">
+    <p class="lede">Rather than treating street photography as a single style, the book treats it as a spectrum: poetic and political, playful and brutal, intimate and panoramic.</p>
+    <div class="nums"><div><b>9</b><span>Parts</span></div><div><b id="n-people">103</b><span>Photographers</span></div><div><b id="n-works">640</b><span>Verified works</span></div></div>
+  </div>
+  <div class="go"><a class="btn" href="book.html">Open the monograph</a><a class="txt" href="book.html#corrections">Read the fact-check log</a></div>
+  <ul class="parts" id="parts"></ul>
+  <p class="credit">Photographs on this page are in the public domain and load from Wikimedia Commons. Photographs still in copyright are not reproduced anywhere on this site; each has a link to find it.</p>
+</section>
+</main>
+
+<script src="data.js"></script>
+<script src="commons.js"></script>
+<script>
+(function(){
+const D=window.SM,P=D.people;
+const ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX"];
+const SHORT={I:"Foundations",II:"Modern masters",III:"Postwar and the photobook",IV:"New Documents",V:"Color",VI:"Global street",VII:"Long-form documentary",VIII:"Late film to digital",IX:"Digital-native wave"};
+const ERA={I:"The city becomes a subject.",II:"Form, timing and the language of the street.",III:"The photobook era: New York, Paris, Tokyo.",IV:"1967: New Documents. The snapshot becomes a method.",V:"1935: Kodachrome. 1976: color enters the museum.",VI:"Japan, Europe, Latin America: the world as a stage.",VII:"Years of access, and stories told at length.",VIII:"From the last rolls of film to the first sensors.",IX:"The phone, the feed and the open classroom."};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* leader */
+const leader=document.getElementById("leader");
+const dropLeader=()=>leader.classList.add("skip");
+["click","wheel","touchstart","keydown"].forEach(ev=>addEventListener(ev,dropLeader,{once:true,passive:true}));
+setTimeout(dropLeader,2200);
+
+/* after-reel numbers and parts */
+document.getElementById("n-people").textContent=P.length;
+document.getElementById("n-works").textContent=D.stats.photos+D.stats.series;
+document.getElementById("parts").innerHTML=ROMAN.map(r=>{const l=P.filter(p=>p.part===r);return `<li><a href="book.html#${l[0].id}"><b>${r}</b><span>${esc(D.parts[r])}</span><small>${l.length} photographers · from ${esc(l[0].short)}</small></a></li>`}).join("");
+
+/* film strip */
+const film=document.getElementById("film");
+const TINT=[["#6e1f17","#b8892f"],["#16595c","#d29b1d"],["#9a3324","#1f6f73"],["#2b3f6a","#c2711f"],["#245c4a","#b33a2e"],["#7a2d3b","#d9a441"]];
+let html="",n=0;const marks=[];
+ROMAN.forEach(r=>{
+  html+=`<div class="fr lead" data-part="${r}"><div><b>${r}</b><span>${esc(SHORT[r])}</span></div></div>`;
+  P.filter(p=>p.part===r).forEach((p,i)=>{
+    n++;const g=20+(n*37)%50;
+    const bg=p.palette==="c"||(p.palette==="b"&&n%2)?`linear-gradient(${110+n*23}deg,${TINT[n%6][0]},${TINT[n%6][1]})`:`radial-gradient(ellipse at ${20+(n*29)%60}% ${30+(n*17)%40}%,rgb(${g+120},${g+120},${g+116}),transparent 60%),linear-gradient(${140+n*31}deg,rgb(${g},${g},${g}),rgb(${g+55},${g+55},${g+52}))`;
+    html+=`<a class="fr" href="book.html#${p.id}" data-part="${r}" data-born="${p.born}" style="background:${bg}"><span class="no">→ ${n}${n%2?"A":""}</span><span class="nm">${esc(p.name)}</span><span class="yr">${p.died?p.born+"–"+p.died:"b. "+p.born}</span></a>`;
+  });
+});
+film.insertAdjacentHTML("beforeend",html);
+document.getElementById("edgeprint").textContent=Array(60).fill("STREET MONOGRAPH  SAFETY FILM  400").join("   ▸   ");
+const frs=[...film.querySelectorAll(".fr")];
+const eraY=document.getElementById("era-y"),eraP=document.getElementById("era-part"),eraT=document.getElementById("era-txt");
+let lastPart="";
+
+/* public-domain images */
+function put(img,q,srcEl,ph){
+  if(!window.SMCommons)return;
+  SMCommons.find(q,1280).then(o=>{if(!o)return;img.onload=()=>{img.hidden=false;if(ph)ph.hidden=true};img.src=o.src;
+    if(srcEl)srcEl.innerHTML=`Image: <a href="${esc(o.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>, public domain`});
+}
+put(document.getElementById("plate-img"),"Boulevard du Temple by Daguerre",document.getElementById("plate-src"),document.getElementById("plate-ph"));
+put(document.getElementById("print-img"),"Atget rue Valette Panthéon 1925",document.getElementById("print-src"),document.getElementById("print-ph"));
+const snapQ=["Riis Bandit's Roost Mulberry Street","Hine Newsies at Skeeter's Branch St. Louis","Stieglitz Winter Fifth Avenue 1893"];
+document.querySelectorAll("#snaps img").forEach((im,i)=>put(im,snapQ[i],null,null));
+
+/* pixel scene */
+const cv=document.getElementById("px"),cx=cv.getContext("2d"),off=document.createElement("canvas"),ox=off.getContext("2d");
+let lastBlock=-1;
+function drawPx(t){
+  const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;
+  const block=Math.max(1,Math.round(64*Math.pow(1-ease(clamp(t/.62)),2.2))+1);
+  if(block===lastBlock&&cv.width===w)return;lastBlock=block;
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}
+  const sw=Math.max(2,Math.ceil(w/block)),sh=Math.max(2,Math.ceil(h/block));
+  off.width=sw;off.height=sh;
+  ox.fillStyle="#050608";ox.fillRect(0,0,sw,sh);
+  const fs=Math.min(sw*.145,sh*.24);
+  ox.font=`800 ${fs}px "Big Shoulders Display","Arial Narrow",Impact,sans-serif`;ox.textAlign="center";ox.textBaseline="middle";
+  ox.fillStyle="#ece7dc";ox.fillText("STREET",sw/2,sh*.2);ox.fillText("MONOGRAPH",sw/2,sh*.2+fs*.84);
+  if(block>3){const id=ox.getImageData(0,0,sw,sh),d=id.data;for(let i=0;i<d.length;i+=4){if(d[i]>60){const k=(i/4)%3;d[i]=k===0?255:60;d[i+1]=k===1?255:60;d[i+2]=k===2?255:70}}ox.putImageData(id,0,0)}
+  cx.imageSmoothingEnabled=false;cx.clearRect(0,0,w,h);cx.drawImage(off,0,0,sw,sh,0,0,sw*block,sh*block);
+}
+
+/* scroll engine */
+const reel=document.getElementById("reel"),scenes=[...document.querySelectorAll(".sc")];
+const W=scenes.map(s=>+s.dataset.w),SUM=W.reduce((a,b)=>a+b,0);
+const counter=document.getElementById("counter"),hint=document.getElementById("hint"),perf=document.getElementById("perf");
+const timer=document.getElementById("timer"),expo=document.getElementById("expo");
+let filmW=0;const measure=()=>{filmW=film.scrollWidth};
+function update(){
+  const total=reel.offsetHeight-innerHeight,p=clamp(-reel.getBoundingClientRect().top/total);
+  perf.style.setProperty("--p",p);
+  hint.style.opacity=p>.02?0:1;
+  const e=.012;let acc=0,cur=0;
+  scenes.forEach((s,i)=>{
+    const a=acc/SUM,b=(acc+W[i])/SUM;acc+=W[i];
+    const t=clamp((p-a)/(b-a));
+    let o=Math.min(i===0?1:(p-(a-e))/(2*e),i===scenes.length-1?1:((b+e)-p)/(2*e),1);o=clamp(o);
+    s.style.opacity=o;s.style.visibility=o>0?"visible":"hidden";s.style.setProperty("--t",t.toFixed(4));
+    if(p>=a)cur=i;
+    if(o<=0)return;
+    if(i===0){const op=ease(clamp(t/.6));s.style.setProperty("--o",(6+op*118).toFixed(2));s.style.setProperty("--sw",(op*38).toFixed(2));
+      const r=ease(clamp((t-.42)/.46));s.style.setProperty("--rot",(180*(1-r)).toFixed(2));s.style.setProperty("--sharp",clamp(t/.5).toFixed(3))}
+    if(i===1){expo.textContent=Math.round(t*7)+" min"}
+    if(i===2){s.style.setProperty("--f",ease(clamp((t-.12)/.6)).toFixed(3));const d=Math.abs(t-.12);s.style.setProperty("--fl",(d<.035?(1-d/.035)*.85:0).toFixed(3))}
+    if(i===3){
+      const x=-ease(t)*Math.max(0,filmW-innerWidth*.72)+innerWidth*.28*(1-t);
+      film.style.setProperty("--x",x.toFixed(1)+"px");
+      const mid=innerWidth*.5;let best=null,bd=1e9;
+      for(const f of frs){const r=f.getBoundingClientRect(),dd=Math.abs((r.left+r.right)/2-mid);if(dd<bd){bd=dd;best=f}}
+      if(best){const part=best.dataset.part;if(best.dataset.born)eraY.textContent=best.dataset.born;
+        if(part!==lastPart){lastPart=part;eraP.textContent=`Part ${part} · ${SHORT[part]}`;eraT.textContent=ERA[part]}}
+    }
+    if(i===4){const dv=ease(clamp((t-.08)/.6));s.style.setProperty("--dv",dv.toFixed(3));s.style.setProperty("--pc",ease(clamp((t-.72)/.22)).toFixed(3));
+      const sec=Math.round(clamp(t/.68)*90);timer.textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0")}
+    if(i===5){drawPx(t);s.style.setProperty("--cta",ease(clamp((t-.5)/.3)).toFixed(3))}
+  });
+  counter.textContent=`${String(cur+1).padStart(2,"0")} / ${String(scenes.length).padStart(2,"0")} · ${scenes[cur].dataset.name}`;
+}
+let tick=false;
+addEventListener("scroll",()=>{if(!tick){tick=true;requestAnimationFrame(()=>{tick=false;update()})}},{passive:true});
+addEventListener("resize",()=>{measure();lastBlock=-1;update()});
+measure();update();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{measure();lastBlock=-1;update()});
+})();
+</script>
+</body>
+</html>

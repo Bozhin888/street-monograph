@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Street Monograph - The Book</title>
+<meta name="description" content="103 street and documentary photographers: fact-checked biographies, verified key photographs, lineage and timelines.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: a contact sheet on a light table. Index rail on the left, the sheet on the right, grease pencil marks the selection. */
+:root{
+  --paper:#eceeeb; --sheet:#f7f8f6; --ink:#15181a; --graphite:#5b6166; --rule:#cdd1ce;
+  --pencil:#c3311d; --film:#1c1f21; --film-edge:#d9b65a; --mono-dot:#15181a; --color-dot:#c3311d;
+  --bar:#3d4347; --frame-ink:#f1f1ee; --ok:#2f6b4f;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#111315; --sheet:#181b1d; --ink:#e7e8e4; --graphite:#9aa1a5; --rule:#2c3134;
+  --pencil:#ec6a4f; --film:#0a0b0c; --film-edge:#c9a64c; --mono-dot:#e7e8e4; --color-dot:#ec6a4f;
+  --bar:#b9bfc2; --frame-ink:#f1f1ee; --ok:#6fbf97; color-scheme:dark}}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pencil);outline-offset:3px}
+
+.app{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+.rail{border-right:1px solid var(--rule);padding:24px 18px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:14px;min-width:0}
+.mark{font-family:var(--display);font-weight:800;font-size:34px;line-height:.9;letter-spacing:.01em;text-transform:uppercase}
+.mark button{all:unset;cursor:pointer}
+.mark small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;color:var(--graphite);margin-top:8px;text-transform:uppercase}
+.find{display:flex;gap:8px;align-items:center}
+.find input{flex:1;min-width:0;font:14px var(--mono);color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-radius:2px;padding:8px 10px}
+.find input::placeholder{color:var(--graphite)}
+.toc-btn{display:none}
+.idxwrap{flex:1;min-height:0;overflow:auto;margin-inline:-6px;padding-inline:6px;overscroll-behavior:contain}
+.idx{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.idx .grp{padding:16px 0 6px;display:grid;grid-template-columns:30px 1fr;gap:0 8px;align-items:baseline;border-bottom:2px solid var(--ink)}
+.idx .grp:first-child{padding-top:4px}
+.idx .grp b{font-family:var(--display);font-weight:800;font-size:20px;line-height:1}
+.idx .grp span{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--graphite);line-height:1.35}
+.idx button{all:unset;cursor:pointer;display:grid;grid-template-columns:30px 1fr;gap:0 8px;padding:6px 6px;border-bottom:1px solid var(--rule);width:100%;box-sizing:border-box;position:relative}
+.idx .pn{font-family:var(--mono);font-size:11px;color:var(--graphite);padding-top:3px;font-variant-numeric:tabular-nums}
+.idx .nm{font-family:var(--display);font-weight:600;font-size:19px;line-height:1.1;letter-spacing:.01em}
+.idx .yr{grid-column:2;font-family:var(--mono);font-size:10.5px;color:var(--graphite);font-variant-numeric:tabular-nums}
+.idx button:hover .nm{color:var(--pencil)}
+.idx button[aria-current="true"]::after{content:"";position:absolute;inset:2px -2px;border:2px solid var(--pencil);border-radius:3px 7px 4px 6px;transform:rotate(-.6deg);pointer-events:none}
+.idx button:focus-visible{outline:2px solid var(--pencil);outline-offset:-2px}
+.idx .empty{font-family:var(--mono);font-size:12px;color:var(--graphite);padding:14px 0}
+.railfoot{border-top:1px solid var(--rule);padding-top:12px;display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:12px}
+.railfoot a,.railfoot button{all:unset;cursor:pointer;border-bottom:1px solid var(--rule);align-self:flex-start;line-height:1.5}
+.railfoot a:hover,.railfoot button:hover{color:var(--pencil);border-color:var(--pencil)}
+.railfoot a:focus-visible,.railfoot button:focus-visible{outline:2px solid var(--pencil);outline-offset:2px}
+
+main{padding-inline:clamp(16px,4vw,56px);padding-block:36px 64px;min-width:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite)}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(46px,7.5vw,100px);line-height:.88;letter-spacing:.005em}
+h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:28px;letter-spacing:.02em;line-height:1}
+.section{display:flex;flex-direction:column;gap:16px;padding-top:40px;margin-top:40px;border-top:1px solid var(--rule)}
+.prose{max-width:66ch}
+.prose p{margin:0 0 .9em}
+.lede{font-size:clamp(19px,2.2vw,23px);line-height:1.45;max-width:42ch;font-style:italic;margin:0}
+.caveat{font-family:var(--mono);font-size:12px;color:var(--graphite);max-width:74ch;margin:0;line-height:1.6}
+.caveat a,.caveat button{all:unset;cursor:pointer;border-bottom:1px solid var(--graphite);color:var(--ink)}
+.caveat a:hover,.caveat button:hover{color:var(--pencil);border-color:var(--pencil)}
+
+.intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end;margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink)}
+.stat{padding:10px 10px 0 0}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--graphite);text-transform:uppercase}
+.chartbox{background:var(--sheet);border:1px solid var(--rule);padding:14px 10px}
+.hscroll{overflow-x:auto}
+.hscroll > .inner{min-width:640px}
+.chartbox svg{display:block;width:100%;height:auto}
+.chartbox svg text{font-family:var(--mono);fill:var(--graphite)}
+.chartbox .nmlab{font-family:var(--display);font-weight:600;fill:var(--ink);cursor:pointer}
+.chartbox .nmlab:hover,.chartbox .nmlab:focus{fill:var(--pencil);outline:none}
+.chartbox .partlab{font-family:var(--display);font-weight:800;fill:var(--ink)}
+.chartbox .halo{paint-order:stroke;stroke:var(--sheet);stroke-width:4px;stroke-linejoin:round}
+.vscroll{max-height:540px;overflow-y:auto;border-top:1px solid var(--rule);overscroll-behavior:contain}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--mono);font-size:12px;color:var(--graphite)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.legend i.both{background:var(--mono-dot);box-shadow:0 0 0 2px var(--color-dot)}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));border-top:2px solid var(--ink)}
+.toc section{padding:12px 16px 16px 0;border-bottom:1px solid var(--rule);min-width:0}
+.toc h3{display:flex;gap:10px;align-items:baseline;font-family:var(--display);font-weight:800;font-size:22px;line-height:1.05}
+.toc h3 small{font-family:var(--mono);font-weight:400;font-size:11px;color:var(--graphite);letter-spacing:.06em;white-space:nowrap}
+.toc p{margin:4px 0 8px;font-size:15px;line-height:1.35}
+.toc ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 10px}
+.toc li button{all:unset;cursor:pointer;font-family:var(--mono);font-size:12px;border-bottom:1px solid var(--rule);line-height:1.6}
+.toc li button:hover{color:var(--pencil);border-color:var(--pencil)}
+.toc li.add button{color:var(--graphite)}
+.kinds{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kinds li{display:flex;flex-direction:column;gap:4px;padding:10px 14px 12px 0;border-bottom:1px solid var(--rule)}
+.kinds b{font-family:var(--display);font-weight:800;font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+.kinds span{font-size:14.5px;line-height:1.35}
+
+.phead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+.partchip{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--ink);padding:4px 9px;border-radius:2px;white-space:nowrap}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-top:2px solid var(--ink);margin:22px 0 0}
+.fact{padding:10px 14px 12px 0;border-bottom:1px solid var(--rule);min-width:0}
+.fact dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--graphite)}
+.fact dd{margin:3px 0 0;font-size:16px;line-height:1.35}
+.fact dd a{border-bottom:1px solid var(--rule);text-decoration:none}
+.fact dd a:hover{color:var(--pencil);border-color:var(--pencil)}
+.status{margin:14px 0 0;font-family:var(--mono);font-size:12px;line-height:1.5;display:flex;gap:10px;align-items:baseline;max-width:74ch}
+.status::before{content:"Updated";font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--pencil);color:var(--pencil);padding:1px 6px;border-radius:2px;flex:none}
+.life{margin-top:18px}
+.life svg{display:block;width:100%;height:auto;overflow:visible}
+.life text{font-family:var(--mono);font-size:11px;fill:var(--graphite)}
+.two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px}
+.impact{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.impact li{border-left:2px solid var(--rule);padding-left:14px}
+.impact b{display:block;font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.01em;line-height:1.15;margin-bottom:2px}
+.impintro{margin:0 0 16px;font-style:italic}
+
+.sheet{background:var(--film);padding:14px 14px 10px;border-radius:2px}
+.edge{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--film-edge);display:flex;justify-content:space-between;gap:12px;padding:0 4px 8px;opacity:.85}
+.frames{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.frame{all:unset;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:6px;min-width:0}
+.frame .img{aspect-ratio:3/2;max-width:100%;border-radius:1px;position:relative;overflow:hidden;background-size:cover;background-position:center}
+.frame .img.grain::after{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:overlay;opacity:.9}
+.frame .img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+.frame .num{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--film-edge);display:flex;justify-content:space-between;gap:6px}
+.frame .ttl{position:absolute;left:8px;right:8px;bottom:7px;z-index:1;font-family:var(--mono);font-size:11px;line-height:1.3;color:var(--frame-ink);text-shadow:0 1px 2px #000,0 0 6px #000;overflow-wrap:anywhere}
+.frame .kind{position:absolute;top:6px;left:7px;z-index:1;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--film-edge);border:1px solid var(--film-edge);padding:0 4px;border-radius:1px;background:rgba(0,0,0,.45)}
+.frame svg.grease{position:absolute;inset:-7px -7px auto -7px;width:calc(100% + 14px);aspect-ratio:3/2;pointer-events:none;overflow:visible;opacity:0;transition:opacity .15s}
+.frame[aria-pressed="true"] svg.grease{opacity:1}
+.frame:hover .img{filter:brightness(1.15)}
+.frame:focus-visible{outline:2px solid var(--film-edge);outline-offset:4px}
+.loupe{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;background:var(--sheet);border:1px solid var(--rule);padding:16px 18px;margin-top:-1px}
+.loupe.has-img{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;align-items:start}
+.loupe figure{margin:0;display:flex;flex-direction:column;gap:6px}
+.loupe figure img{display:block;width:100%;height:auto;max-height:70vh;object-fit:contain;background:var(--film)}
+.loupe figcaption{font-family:var(--mono);font-size:11px;color:var(--graphite);line-height:1.5;overflow-wrap:anywhere}
+.loupe figcaption a{border-bottom:1px solid var(--rule);text-decoration:none}
+.ltxt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 18px;align-content:start}
+.ltxt .y{font-family:var(--display);font-weight:800;font-size:40px;line-height:.95;font-variant-numeric:tabular-nums;grid-row:span 4;min-width:2.4ch}
+.ltxt h3{font-family:var(--body);font-weight:600;font-size:19px;line-height:1.3}
+.ltxt p{margin:0;max-width:62ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px 8px;font-family:var(--mono);font-size:11px;margin:2px 0}
+.tag{border:1px solid var(--rule);padding:1px 7px;border-radius:2px;letter-spacing:.06em;text-transform:uppercase;color:var(--graphite)}
+.tag.pd{border-color:var(--ok);color:var(--ok)}
+.tag.u{border-color:var(--pencil);color:var(--pencil)}
+.links{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--mono);font-size:12px;margin-top:4px}
+.links a{border-bottom:1px solid var(--ink);text-decoration:none}
+.links a:hover{color:var(--pencil);border-color:var(--pencil)}
+
+.lineage{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:0 18px;align-items:center}
+.lcol{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;min-width:0}
+.lcol h4{flex-basis:100%;margin:0 0 4px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--graphite)}
+.lcol.from{justify-content:flex-end;text-align:right}
+.node{display:inline-flex;gap:8px;align-items:baseline;padding:4px 10px;border:1px solid var(--ink);border-radius:2px;background:var(--sheet);font-size:15px;line-height:1.3;cursor:pointer}
+.node small{font-family:var(--mono);font-size:10px;color:var(--graphite);letter-spacing:.06em}
+.node:hover{border-color:var(--pencil);color:var(--pencil)}
+.node.none{cursor:default;border-color:var(--rule);color:var(--graphite)}
+.node.more{border-style:dashed;font-family:var(--mono);font-size:12px}
+.center{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:24px;line-height:1;padding:16px 18px;border:2px solid var(--ink);text-align:center;position:relative;max-width:220px;overflow-wrap:anywhere}
+.center::before,.center::after{content:"→";position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:16px;color:var(--graphite)}
+.center::before{left:-17px}.center::after{right:-17px}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-direction:row}
+.pager button{all:unset;cursor:pointer;font-family:var(--mono);font-size:13px;border-bottom:1px solid var(--ink);padding-bottom:2px}
+.pager button:hover{color:var(--pencil);border-color:var(--pencil)}
+
+/* corrections */
+.fixes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.fixes li{padding:12px 0 14px;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:minmax(0,1fr);gap:6px;max-width:92ch}
+.fixes .who{all:unset;cursor:pointer;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.1}
+.fixes .who:hover{color:var(--pencil)}
+.fixes .why{font-size:15.5px;line-height:1.45}
+.fixes .diff{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--graphite);overflow-wrap:anywhere}
+.fixes del{color:var(--pencil);text-decoration-thickness:1px}
+.fixes ins{color:var(--ok);text-decoration:none}
+.fixes .cut{font-style:italic}
+details.chfix{border:1px solid var(--rule);background:var(--sheet);padding:10px 14px;max-width:92ch}
+details.chfix summary{cursor:pointer;font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+details.chfix .fixes{border-top:0;margin-top:6px}
+details.chfix .fixes li:last-child{border-bottom:0}
+
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--rule);padding:16px 16px 14px;gap:12px}
+  .mark{font-size:28px}
+  .toc-btn{all:unset;display:inline-flex;cursor:pointer;font-family:var(--mono);font-size:12px;border:1px solid var(--ink);padding:8px 10px;border-radius:2px;white-space:nowrap}
+  .idxwrap{display:none;max-height:60vh}
+  .rail.open .idxwrap{display:block}
+  .railfoot{border-top:0;padding-top:0;flex-direction:row;flex-wrap:wrap;gap:6px 16px}
+  .intro,.two,.phead,.loupe.has-img{grid-template-columns:minmax(0,1fr)}
+  .lineage{grid-template-columns:minmax(0,1fr);gap:14px}
+  .lcol.from{justify-content:flex-start;text-align:left}
+  .center{max-width:none}
+  .center::before,.center::after{display:none}
+  .stat b{font-size:36px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="rail" id="rail">
+    <div class="mark"><button type="button" data-go="overview">Street<br>Monograph</button><small id="markcount">103 photographers · 9 parts</small></div>
+    <div class="find">
+      <input id="q" type="search" placeholder="Find a photographer" autocomplete="off" aria-label="Find a photographer">
+      <button type="button" class="toc-btn" id="tocbtn" aria-expanded="false" aria-controls="idxwrap">Contents</button>
+    </div>
+    <nav class="idxwrap" id="idxwrap" aria-label="Contents"><ul class="idx" id="idx"></ul></nav>
+    <div class="railfoot">
+      <button type="button" data-go="corrections">Fact-check log</button>
+      <a href="./">Title sequence</a>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script src="data.js"></script>
+<script src="commons.js"></script>
+<script>
+const D=window.SM, P=D.people, PARTS=D.parts;
+const byId=Object.fromEntries(P.map(p=>[p.id,p]));
+const ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX"];
+const PART_SHORT={I:"Foundations",II:"Modern masters",III:"Postwar and the photobook",IV:"New Documents",V:"Color",VI:"Global street",VII:"Long-form documentary",VIII:"Late film to digital",IX:"Digital-native wave"};
+const NUMBERED=P.filter(p=>p.num).length;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const yrs=p=>p.died?`${p.bq?"c. ":""}${p.born}–${p.died}`:`b. ${p.bq?"c. ":""}${p.born}`;
+const fold=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const main=document.getElementById("main");
+const NOW=new Date().getFullYear();
+const FIX=D.log.reduce((m,l)=>((m[l.id]=m[l.id]||[]).push(l),m),{});
+
+let query="";
+function renderIndex(cur){
+  const q=fold(query.trim());
+  let html="",shown=0;
+  ROMAN.forEach(r=>{
+    const list=P.filter(p=>p.part===r&&(!q||fold(p.name+" "+p.short+" "+p.streets).includes(q)));
+    if(!list.length)return;
+    html+=`<li class="grp" aria-hidden="true"><b>${r}</b><span>${esc(PART_SHORT[r])}</span></li>`;
+    list.forEach(p=>{shown++;html+=`<li><button type="button" data-go="${p.id}" aria-current="${cur===p.id}"><span class="pn">${p.num?String(p.num).padStart(2,"0"):"+"}</span><span class="nm">${esc(p.name)}</span><span class="yr">${yrs(p)}</span></button></li>`});
+  });
+  if(!shown)html=`<li class="empty">No photographer matches “${esc(query)}”.</li>`;
+  document.getElementById("idx").innerHTML=html;
+}
+function revealCurrent(){
+  const b=document.querySelector('#idx button[aria-current="true"]'),w=document.getElementById("idxwrap");
+  if(b&&w&&w.offsetParent){const br=b.getBoundingClientRect(),wr=w.getBoundingClientRect();if(br.top<wr.top||br.bottom>wr.bottom)w.scrollTop+=br.top-wr.top-wr.height/3}
+}
+
+const dotFill=p=>p.palette==="c"?"var(--color-dot)":"var(--mono-dot)";
+const dotStroke=p=>p.palette==="b"?"var(--color-dot)":"var(--sheet)";
+const workYears=p=>p.works.map(w=>w.yn).filter(y=>y!=null);
+
+function timelineSVGs(){
+  const x0=1840,x1=2030,L=210,R=985,W=1000,rowH=18,partH=30;
+  const sx=y=>L+(y-x0)/(x1-x0)*(R-L);
+  let rows=[],y=6;
+  ROMAN.forEach(r=>{rows.push({part:r,y});y+=partH;P.filter(p=>p.part===r).forEach(p=>{rows.push({p,y});y+=rowH})});
+  const H=y+8;
+  let grid="";for(let t=1840;t<=2020;t+=20)grid+=`<line x1="${sx(t)}" x2="${sx(t)}" y1="0" y2="${H}" stroke="var(--rule)" stroke-width="1"/>`;
+  let axis=`<svg viewBox="0 0 ${W} 26" aria-hidden="true">`;
+  for(let t=1840;t<=2020;t+=20)axis+=`<text x="${sx(t)}" y="17" font-size="11" text-anchor="middle">${t}</text>`;
+  axis+=`</svg>`;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lifespans of all ${P.length} photographers, grouped by part, with the years of their key works">${grid}`;
+  rows.forEach(o=>{
+    if(o.part){s+=`<text class="partlab" x="10" y="${o.y+20}" font-size="17">Part ${o.part}</text><text x="${L-10}" y="${o.y+20}" font-size="10.5" text-anchor="end">${esc(PART_SHORT[o.part].toUpperCase())}</text><line x1="10" x2="${R}" y1="${o.y+26}" y2="${o.y+26}" stroke="var(--ink)" stroke-width="1.5"/>`;return}
+    const p=o.p,cy=o.y+rowH/2+1,end=p.died||NOW;
+    s+=`<text class="nmlab" data-go="${p.id}" tabindex="0" role="link" x="${L-10}" y="${cy+5}" font-size="14.5" text-anchor="end">${esc(p.name)}</text>`;
+    s+=`<line x1="${sx(p.born)}" x2="${sx(Math.min(end,x1))}" y1="${cy}" y2="${cy}" stroke="var(--graphite)" stroke-width="1.6" ${p.died?"":'stroke-dasharray="4 3"'}/>`;
+    workYears(p).forEach(yv=>{s+=`<circle cx="${sx(Math.max(x0,Math.min(x1,yv)))}" cy="${cy}" r="3.6" fill="${dotFill(p)}" stroke="${dotStroke(p)}" stroke-width="1.3"/>`});
+  });
+  return {axis,body:s+`</svg>`};
+}
+const mctx=document.createElement("canvas").getContext("2d");
+function tw(s,size=14.5){try{mctx.font=`600 ${size}px "Big Shoulders Display","Arial Narrow",Impact,sans-serif`;return mctx.measureText(s).width}catch(e){return s.length*8}}
+function spectrumSVG(){
+  const L=150,R=975,W=1000,laneH=124,top=8,sx=v=>L+12+v*(R-L-24);
+  const H=top+ROMAN.length*laneH+34;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Editorial placement of each photographer from invisible to engaged, one lane per part">`;
+  ROMAN.forEach((r,li)=>{
+    const y0=top+li*laneH, cy=y0+laneH/2;
+    s+=`<text class="partlab" x="8" y="${cy-2}" font-size="20">${r}</text><text x="8" y="${cy+14}" font-size="10">${esc(PART_SHORT[r].toUpperCase())}</text>`;
+    s+=`<line x1="${L}" x2="${R}" y1="${cy}" y2="${cy}" stroke="var(--rule)" stroke-width="1.5"/>`;
+    if(li<ROMAN.length-1)s+=`<line x1="8" x2="${R}" y1="${y0+laneH}" y2="${y0+laneH}" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 4"/>`;
+    const items=P.filter(p=>p.part===r).sort((a,b)=>a.approach-b.approach);
+    const tiers=[-11,21,-27,37,-43,53].map(dy=>({dy,end:-1e9}));
+    let leaders="",labels="",marks="";
+    items.forEach(p=>{
+      const x=sx(p.approach), w=tw(p.short)+6;
+      let a=x-w/2; if(a<L)a=L; if(a+w>R)a=R-w;
+      let ti=tiers.findIndex(t=>a>t.end+6);
+      if(ti<0){ti=tiers.reduce((bi,t,i)=>t.end<tiers[bi].end?i:bi,0)}
+      const t=tiers[ti]; t.end=a+w;
+      const ly=cy+t.dy;
+      if(ti>=2)leaders+=`<line x1="${x}" x2="${x}" y1="${cy+(t.dy<0?-7:7)}" y2="${t.dy<0?ly+3:ly-11}" stroke="var(--rule)" stroke-width="1"/>`;
+      labels+=`<text class="nmlab halo" data-go="${p.id}" tabindex="0" role="link" x="${a+w/2}" y="${ly}" font-size="14.5" text-anchor="middle">${esc(p.short)}</text>`;
+      marks+=`<circle cx="${x}" cy="${cy}" r="5.5" fill="${dotFill(p)}" stroke="${dotStroke(p)}" stroke-width="${p.palette==="b"?2:1.5}"><title>${esc(p.name)}</title></circle>`;
+    });
+    s+=leaders+labels+marks;
+  });
+  s+=`<text x="${L}" y="${H-10}" font-size="12">← invisible, patient</text><text x="${R}" y="${H-10}" font-size="12" text-anchor="end">engaged, confrontational →</text>`;
+  return s+`</svg>`;
+}
+function citedSVG(){
+  const top=[...P].sort((a,b)=>b.citedBy-a.citedBy||a.born-b.born).slice(0,15);
+  const L=200,R=930,W=1000,rowH=26,max=Math.ceil(top[0].citedBy/10)*10;
+  const sx=v=>L+v/max*(R-L), H=top.length*rowH+30;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="The fifteen photographers mentioned by the most other chapters">`;
+  for(let t=0;t<=max;t+=10)s+=`<line x1="${sx(t)}" x2="${sx(t)}" y1="0" y2="${H-22}" stroke="var(--rule)"/><text x="${sx(t)}" y="${H-6}" font-size="11" text-anchor="middle">${t}</text>`;
+  top.forEach((p,i)=>{
+    const y=i*rowH+4;
+    s+=`<text class="nmlab" data-go="${p.id}" tabindex="0" role="link" x="${L-10}" y="${y+15}" font-size="15" text-anchor="end">${esc(p.name)}</text>`;
+    s+=`<rect x="${L}" y="${y+3}" width="${Math.max(1,sx(p.citedBy)-L)}" height="${rowH-9}" fill="var(--bar)"/>`;
+    s+=`<text x="${sx(p.citedBy)+6}" y="${y+14}" font-size="11.5" style="fill:var(--ink)">${p.citedBy}</text>`;
+  });
+  return s+`</svg>`;
+}
+
+function renderOverview(){
+  const T=timelineSVGs(), S=D.stats, adds=P.length-NUMBERED, total=S.photos+S.series;
+  main.innerHTML=`
+  <p class="eyebrow">A monograph of street and documentary photography</p>
+  <div class="intro">
+    <div>
+      <h1>A way of paying attention</h1>
+      <p class="lede" style="margin-top:22px">Rather than treating street photography as a single style, the book treats it as a spectrum: poetic and political, playful and brutal, intimate and panoramic.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>9</b><span>Parts</span></div>
+      <div class="stat"><b>${P.length}</b><span>Photographers</span></div>
+      <div class="stat"><b>${total}</b><span>Key works</span></div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="eyebrow">From the introduction</div>
+    <div class="prose">${D.intro.map(t=>`<p>${esc(t)}</p>`).join("")}</div>
+    <p class="caveat">${NUMBERED} numbered chapters, plus ${adds} entries the draft adds at the ends of Parts IV to IX without a number. The added ones are marked + in the contents.</p>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Fact-check · November 2026</div>
+    <h2>What changed from the draft</h2>
+    <ul class="kinds">
+      <li><b>${S.fixes}</b><span>corrections to bios and impact notes, in ${S.fixedChapters} chapters</span></li>
+      <li><b>${S.removed.toLocaleString("en")}</b><span>draft key-photograph entries set aside</span></li>
+      <li><b>${S.photos}</b><span>documented single photographs in their place</span></li>
+      <li><b>${S.series}</b><span>documented series, where the work is a body of pictures</span></li>
+      <li><b>${S.pd}</b><span>public-domain photographs shown on the page</span></li>
+    </ul>
+    <p class="caveat">The draft's key-photograph lists mixed real pictures with invented titles, so every list was rebuilt from documented works. Photographs still in copyright are not reproduced here: each one has a link to find it. Entries tagged "confirm" are real bodies of work whose exact title or date should be checked against the photographer's archive before print. <button type="button" data-go="corrections">Read the full fact-check log</button>.</p>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Lives and signature work · 1840 to today</div>
+    <h2>Who worked when</h2>
+    <div class="chartbox hscroll"><div class="inner">${T.axis}<div class="vscroll">${T.body}</div></div></div>
+    <div class="legend"><span><i style="background:var(--mono-dot)"></i>Key work, black and white</span><span><i style="background:var(--color-dot)"></i>Key work, color</span><span><i class="both"></i>Works in both</span><span>- - - living</span></div>
+  </section>
+  <section class="section">
+    <div class="eyebrow">How close they stand · one lane per part</div>
+    <h2>From invisible to engaged</h2>
+    <div class="chartbox hscroll"><div class="inner">${spectrumSVG()}</div></div>
+    <p class="caveat">Editorial placement based on each chapter's description of method. A reading aid for comparing approaches, not a measurement.</p>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Cross-references between chapters</div>
+    <h2>Who the chapters keep returning to</h2>
+    <div class="chartbox hscroll"><div class="inner">${citedSVG()}</div></div>
+    <p class="caveat">Number of other chapters that mention each photographer by name. Top 15 of ${P.length}.</p>
+  </section>
+  <section class="section">
+    <div class="eyebrow">The nine parts</div>
+    <h2>How the book is organized</h2>
+    <div class="toc">${ROMAN.map(r=>{const list=P.filter(p=>p.part===r);return `<section><h3>${r}<small>${list.length} photographers</small></h3><p>${esc(PARTS[r])}</p><ul>${list.map(p=>`<li${p.num?"":' class="add"'}><button type="button" data-go="${p.id}">${p.num?"":"+ "}${esc(p.name)}</button></li>`).join("")}</ul></section>`}).join("")}</div>
+  </section>`;
+}
+
+function fixItem(l,withName){
+  const p=byId[l.id];
+  const diff=l.new?`<del>${esc(l.old)}</del> → <ins>${esc(l.new)}</ins>`:`<del>${esc(l.old)}</del> <span class="cut">(removed)</span>`;
+  return `<li>${withName?`<button type="button" class="who" data-go="${p.id}">${esc(p.name)}</button>`:""}<div class="why">${esc(l.why)}</div><div class="diff">${diff}</div></li>`;
+}
+function renderCorrections(){
+  const S=D.stats;
+  const deaths=P.filter(p=>p.status);
+  main.innerHTML=`
+  <p class="eyebrow">Fact-check log · November 2026</p>
+  <h1 style="margin-top:10px">What was corrected</h1>
+  <p class="lede" style="margin-top:20px">${S.fixes} corrections in ${S.fixedChapters} of ${P.length} chapters. The draft's wording is kept; only wrong, garbled or unsupported statements were changed.</p>
+  <section class="section">
+    <div class="eyebrow">Key photographs</div>
+    <h2>Lists rebuilt</h2>
+    <div class="prose"><p>All ${S.removed.toLocaleString("en")} key-photograph entries in the draft were set aside. Many had titles that repeat under a dozen photographers, dates outside a photographer's life, or described books and exhibitions instead of pictures, and the plausible ones could not be told apart from invented ones. Each photographer now has a short list of documented works: ${S.photos} single photographs and ${S.series} series.</p><p>For photographers known for projects and books, the list names the series. For ${P.filter(p=>p.works.length<=2).length} photographers with little published record, the list is short on purpose.</p></div>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Life dates</div>
+    <h2>Deaths the draft does not record</h2>
+    <ul class="fixes">${deaths.map(p=>`<li><button type="button" class="who" data-go="${p.id}">${esc(p.name)}</button><div class="why">${esc(p.status)}</div></li>`).join("")}</ul>
+    <p class="caveat">Birth years marked "c." in the contents could not be confirmed from a reliable source: ${P.filter(p=>p.bq).map(p=>esc(p.name)).join(", ")}.</p>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Bios and impact notes · in book order</div>
+    <h2>Corrections</h2>
+    <ul class="fixes">${D.log.map(l=>fixItem(l,true)).join("")}</ul>
+  </section>`;
+}
+
+const TINTS=[["#6e1f17","#b8892f"],["#2f3b42","#a8362a"],["#8a6d2b","#3a2a24"],["#16595c","#d29b1d"],["#9a3324","#1f6f73"],["#c2711f","#2b3f6a"],["#7a2d3b","#d9a441"],["#2e4a3a","#c45a2c"],["#3b3f6b","#d07a3a"],["#5c1f2e","#2f6f8f"],["#8c5a1c","#1d3c4f"],["#245c4a","#b33a2e"]];
+const hash=s=>[...s].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7);
+function frameBg(p,i){
+  const color=p.palette==="c"||(p.palette==="b"&&i%2===1);
+  if(color){const t=TINTS[(hash(p.id)+i*5)%TINTS.length];return `linear-gradient(${120+i*37}deg,${t[0]} 0%,${t[0]} 38%,${t[1]} 100%)`}
+  const g=[[18,140],[30,190],[12,110],[40,170],[22,210],[16,150]][(i+hash(p.id))%6];
+  return `radial-gradient(ellipse at ${20+i*13%70}% ${30+(i*17)%50}%,rgb(${g[1]},${g[1]},${g[1]-4}) 0%,transparent 55%),linear-gradient(${150+i*29}deg,rgb(${g[0]},${g[0]},${g[0]}) 0%,rgb(${g[0]+50},${g[0]+50},${g[0]+48}) 100%)`;
+}
+const GREASE=`<svg class="grease" viewBox="0 0 314 216" preserveAspectRatio="none" aria-hidden="true"><path d="M8 12 C80 4 220 8 304 10 C310 70 306 150 308 206 C220 212 90 210 10 207 C5 140 9 70 6 16" fill="none" stroke="var(--pencil)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const shortYear=w=>{if(!w.y||w.y==="n.d.")return "n.d.";const m=w.y.match(/\d{4}s?/);return m?m[0]:w.y};
+const PAL={m:"Black and white",c:"Color",b:"Black and white, and color"};
+const searchURL=(p,w)=>"https://www.google.com/search?tbm=isch&q="+encodeURIComponent(`${p.name} "${w.t.replace(/\s*\(.*?\)\s*/g," ").trim()}" ${shortYear(w)==="n.d."?"":shortYear(w)}`);
+const wikiURL=p=>"https://en.wikipedia.org/wiki/Special:Search?go=Go&search="+encodeURIComponent(p.name+(["boogie","weegee"].includes(p.id)?" photographer":""));
+function nodes(ids,cap){
+  if(!ids.length)return `<span class="node none">None in the chapters</span>`;
+  const head=ids.slice(0,cap),rest=ids.length-head.length;
+  return head.map(id=>{const q=byId[id];return `<button type="button" class="node" data-go="${q.id}">${esc(q.name)}<small>${q.part}</small></button>`}).join("")+(rest>0?`<button type="button" class="node more" data-expand="1">+ ${rest} more</button>`:"");
+}
+let expandLineage=false,renderToken=0;
+function loupeHTML(p,w){
+  const tags=`<span class="tag">${w.k==="p"?"Photograph":"Series"}</span>${w.c?`<span class="tag pd">Public domain</span>`:""}${w.u?`<span class="tag u">Confirm title or date</span>`:""}`;
+  return `<div class="ltxt"><span class="y">${esc(shortYear(w))}</span><h3>${esc(w.t)}${w.y&&shortYear(w)!==w.y?` <span style="font-family:var(--mono);font-size:13px;font-weight:400;color:var(--graphite)">${esc(w.y)}</span>`:""}</h3><div class="tags">${tags}</div><p>${esc(w.d)}</p><div class="links"><a href="${searchURL(p,w)}" target="_blank" rel="noopener">Find this ${w.k==="p"?"photograph":"series"} ↗</a></div></div>`;
+}
+function renderProfile(p,sel=0){
+  const token=++renderToken;
+  const i=P.indexOf(p),prev=P[(i+P.length-1)%P.length],next=P[(i+1)%P.length];
+  const ys=workYears(p), lo=Math.min(p.born,...ys), hi=Math.max(p.died||NOW,...ys);
+  const L=12,R=988, sx=y=>L+(y-lo)/Math.max(1,hi-lo)*(R-L);
+  let life=`<svg viewBox="0 0 1000 56" role="img" aria-label="Lifespan with the years of the key works">`;
+  life+=`<line x1="${sx(p.born)}" x2="${sx(p.died||NOW)}" y1="22" y2="22" stroke="var(--ink)" stroke-width="2" ${p.died?"":'stroke-dasharray="5 4"'}/>`;
+  life+=`<text x="${sx(p.born)}" y="49" text-anchor="start">${p.bq?"c. ":""}${p.born} born</text><text x="${sx(p.died||NOW)}" y="49" text-anchor="end">${p.died?p.died+" died":"living"}</text>`;
+  p.works.forEach((w,k)=>{if(w.yn==null)return;const on=k===sel;
+    life+=`<circle cx="${sx(w.yn)}" cy="22" r="${on?8:5}" fill="${on?"var(--pencil)":dotFill(p)}" stroke="var(--paper)" stroke-width="2"><title>${esc(w.t)}, ${esc(w.y)}</title></circle>`});
+  life+=`</svg>`;
+  const w=p.works[sel]||p.works[0];
+  const where=p.num?`Chapter ${p.num} of ${NUMBERED}`:`Added at the end of Part ${p.part}`;
+  const cap=expandLineage?999:10, fx=FIX[p.id]||[];
+  const nP=p.works.filter(x=>x.k==="p").length,nS=p.works.length-nP;
+  main.innerHTML=`
+  <div class="phead">
+    <div>
+      <p class="eyebrow">Part ${p.part} · ${esc(PARTS[p.part])}</p>
+      <h1 style="margin-top:10px">${esc(p.name)}</h1>
+    </div>
+    <span class="partchip">${yrs(p)}</span>
+  </div>
+  <p class="lede" style="margin-top:20px">${esc(p.lede)}</p>
+  <dl class="facts">
+    <div class="fact"><dt>Born</dt><dd>${esc(p.place)}</dd></div>
+    <div class="fact"><dt>Streets</dt><dd>${esc(p.streets)}</dd></div>
+    <div class="fact"><dt>Palette</dt><dd>${PAL[p.palette]}</dd></div>
+    <div class="fact"><dt>In the book</dt><dd>${where}</dd></div>
+    <div class="fact"><dt>Look up</dt><dd><a href="${wikiURL(p)}" target="_blank" rel="noopener">Wikipedia ↗</a></dd></div>
+  </dl>
+  ${p.status?`<p class="status">${esc(p.status)}</p>`:""}
+  <div class="life">${life}</div>
+
+  <section class="section">
+    <div class="eyebrow">Key works · ${nP?nP+" photograph"+(nP>1?"s":""):""}${nP&&nS?" · ":""}${nS?nS+" series":""} · select a frame</div>
+    <h2>Contact sheet</h2>
+    <div>
+      <div class="sheet">
+        <div class="edge"><span>${p.palette==="c"?"COLOR":p.palette==="b"?"B&amp;W + COLOR":"B&amp;W"} · ${esc(p.name.toUpperCase())}</span><span>${p.works.length} FRAME${p.works.length>1?"S":""}</span></div>
+        <div class="frames">${p.works.map((f,k)=>`
+          <button type="button" class="frame" data-frame="${k}" aria-pressed="${k===sel}" aria-label="${esc(f.t)}, ${esc(f.y)}">
+            <div class="img grain" id="fr${k}" style="background:${frameBg(p,k)}">${f.k==="s"?`<span class="kind">Series</span>`:""}<span class="ttl">${esc(f.t)}</span></div>
+            ${GREASE}
+            <span class="num"><span>→ ${k+1}A</span><span>${esc(f.y)}</span></span>
+          </button>`).join("")}</div>
+      </div>
+      <div class="loupe" id="loupe" aria-live="polite">${loupeHTML(p,w)}</div>
+    </div>
+    <p class="caveat">${p.works.some(x=>x.c)?"Photographs marked public domain are loaded from Wikimedia Commons. ":""}Works still in copyright are not reproduced; the tinted frames stand in for them and each has a link to find the picture.</p>
+  </section>
+
+  <section class="section two">
+    <div class="prose">
+      <div class="eyebrow" style="margin-bottom:12px">Short bio</div>
+      ${p.bio.map(t=>`<p>${esc(t)}</p>`).join("")}
+    </div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Why it matters</div>
+      ${p.impactIntro.map(t=>`<p class="impintro">${esc(t)}</p>`).join("")}
+      <ul class="impact">${p.impact.map(([b,t])=>`<li>${b?`<b>${esc(b)}</b>`:""}${esc(t)}</li>`).join("")}</ul>
+    </div>
+  </section>
+  ${fx.length?`<details class="chfix" style="margin-top:28px"><summary>${fx.length} correction${fx.length>1?"s":""} made to this chapter</summary><ul class="fixes">${fx.map(l=>fixItem(l,false)).join("")}</ul></details>`:""}
+
+  <section class="section">
+    <div class="eyebrow">Cross-references in the chapters · most-linked first · roman numerals give the part</div>
+    <h2>Lineage</h2>
+    <div class="lineage">
+      <div class="lcol from"><h4>Earlier photographers</h4>${nodes(p.from,cap)}</div>
+      <div class="center">${esc(p.short)}</div>
+      <div class="lcol"><h4>Later photographers</h4>${nodes(p.to,cap)}</div>
+    </div>
+    <p class="caveat">Names that appear in this chapter, plus chapters that name ${esc(p.short)}, sorted by birth year into earlier and later.</p>
+  </section>
+
+  <nav class="section pager" aria-label="Chapters">
+    <button type="button" data-go="${prev.id}">← ${esc(prev.name)}</button>
+    <button type="button" data-go="${next.id}">${esc(next.name)} →</button>
+  </nav>`;
+  // public-domain photographs
+  p.works.forEach((f,k)=>{
+    if(!f.c||!window.SMCommons)return;
+    SMCommons.find(f.c).then(o=>{
+      if(!o||token!==renderToken)return;
+      const el=document.getElementById("fr"+k);
+      if(el){el.classList.remove("grain");const im=new Image();im.alt="";im.loading="lazy";im.src=o.src;im.onerror=()=>{im.remove();el.classList.add("grain")};el.prepend(im)}
+      if(k===sel){
+        const lp=document.getElementById("loupe");
+        if(lp&&!lp.querySelector("figure")){lp.classList.add("has-img");const fig=document.createElement("figure");fig.innerHTML=`<img alt="${esc(f.t)}, ${esc(p.name)}, ${esc(f.y)}" src="${esc(o.src)}"><figcaption>File shown: <a href="${esc(o.page)}" target="_blank" rel="noopener">${esc(o.file)}</a>, Wikimedia Commons. Matched by search; open the file page to confirm it is this photograph.</figcaption>`;lp.prepend(fig)}
+      }
+    });
+  });
+}
+
+let current="overview",frame=0;
+function go(id,{scroll=true,fr=0}={}){
+  const p=byId[id];
+  if(id!==current)expandLineage=false;
+  current=p?id:(id==="corrections"?"corrections":"overview");frame=fr;
+  renderIndex(current);
+  p?renderProfile(p,fr):current==="corrections"?(renderToken++,renderCorrections()):(renderToken++,renderOverview());
+  try{history.replaceState(null,"","#"+current)}catch(e){}
+  document.title=p?`${p.name} - Street Monograph`:"Street Monograph - The Book";
+  if(scroll)window.scrollTo({top:0});
+  revealCurrent();
+}
+const rail=document.getElementById("rail"),tocbtn=document.getElementById("tocbtn");
+function setOpen(o){rail.classList.toggle("open",o);tocbtn.setAttribute("aria-expanded",String(o))}
+document.addEventListener("click",e=>{
+  const ex=e.target.closest("[data-expand]");if(ex){expandLineage=true;go(current,{scroll:false,fr:frame});return}
+  const g=e.target.closest("[data-go]");if(g){setOpen(false);go(g.dataset.go);return}
+  const f=e.target.closest("[data-frame]");
+  if(f){const k=+f.dataset.frame;go(current,{scroll:false,fr:k});const b=main.querySelector(`[data-frame="${k}"]`);b&&b.focus({preventScroll:true})}
+});
+document.addEventListener("keydown",e=>{
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches("svg [data-go]")){e.preventDefault();go(e.target.dataset.go);return}
+  if(e.target.matches("input,textarea"))return;
+  const ids=["overview",...P.map(p=>p.id)],i=ids.indexOf(current);
+  if(e.key==="ArrowDown"&&e.altKey){e.preventDefault();go(ids[(i+1)%ids.length])}
+  if(e.key==="ArrowUp"&&e.altKey){e.preventDefault();go(ids[(i+ids.length-1)%ids.length])}
+});
+tocbtn.addEventListener("click",()=>setOpen(!rail.classList.contains("open")));
+const qEl=document.getElementById("q");
+qEl.addEventListener("input",()=>{query=qEl.value;renderIndex(current);if(query.trim())setOpen(true)});
+qEl.addEventListener("keydown",e=>{if(e.key==="Enter"){const b=document.querySelector("#idx button");if(b){setOpen(false);go(b.dataset.go)}}});
+window.addEventListener("hashchange",()=>{const h=(location.hash||"").slice(1);if(h&&h!==current)go(h)});
+document.getElementById("markcount").textContent=`${P.length} photographers · 9 parts`;
+go((location.hash||"").slice(1)||"overview",{scroll:false});
+try{document.fonts.ready.then(()=>{if(current==="overview")renderOverview()})}catch(e){}
+</script>
+</body>
+</html>
